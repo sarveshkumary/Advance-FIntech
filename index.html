@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<HTML lang="en">
+
+<head>
+    <title>My Bitcoin Wallet</title>
+    <meta charset="=UTF=8">
+    <meta name="viewport" content="width=devicce-width. initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <script type="text/javascript" src="https://unpkg.com/bsv@0.30.0/bsv.min.js"></script>
+    <link rel="stylesheet" href="index_styles.css"/>
+    
+    <script type="text/javascript" src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+</head>
+
+<body>
+
+    <div>
+        <a href="index.html" id="head">Wallet Homepage</a>
+        <a href="liveinfo.html" id="head">Live info</a>
+    </div>
+
+    <div id="Block1">
+        <h2 id="head">Your Private key is:</h2>
+        <p id="privText"></p>
+    </div>
+
+    <div id="Block2">
+        <h2 id="head">Your Public key is:</h2>
+        <p id="pubkey"></p>
+    </div>
+
+    <div id="Block3">
+        <h2 id="head">Your Address: </h2>
+        <p id="address"></p>
+    </div>
+
+    <div id="Block4">
+        <h2 id="head">Your QRCode:</h2>
+        <p id="qrcode"></p>
+    </div>
+
+
+    <div id="Block5">
+        <h2 id="head">Your Confirmed Balance (in satoshi):</h2>
+        <p id="confm"></p>
+
+        <h2 id="head">Your Unconfirmed Balance (in satoshi):</h2>
+        <p id="unconfm"></p>
+        <p id="confm"></p>
+    </div>
+</body>
+
+<script>
+    var privKey = bsv.PrivateKey.fromRandom()
+    document.getElementById("privText").innerHTML = privKey
+
+    var pubKey = bsv.PublicKey.fromPrivateKey(privKey)
+    document.getElementById("pubkey").innerHTML = pubKey
+
+    var address = bsv.Address.fromPublicKey(pubKey)
+    document.getElementById("address").innerHTML = address
+
+    var addressCode = 'bitcoinsv:' + address;
+    
+
+    new QRCode(document.getElementById("qrcode"), addressCode)
+    console.log(addressCode)
+
+
+    const woc_api_url = 'https://api.whatsonchain.com/v1/bsv/main/address/' + addressCode + 'balance'
+    console.log(woc_api_url)
+
+    async function getwoc(){
+        const response = await fetch(woc_api_url)
+        const data = await response.json()
+        console.log(data)
+        document.getElementById('confm').textContent = data.confirmed
+        document.getElementById('unconfm').textContent = data.unconfirmed
+    }
+
+    getwoc()
+    
+    const apple = 'https://www.quandl.com/api/v3/datasets/EOD/AAPL?api_key=HA4wUvs113Es83P2xHbs'
+    async function getquandl(){
+        const response = await fetch(apple)
+        const data1 = await response.json()
+        console.log(data1.dataset.data[0][1])
+    }
+
+    const pfizer = 'https://www.quandl.com/api/v3/datasets/EOD/PFE.json?api_key=HA4wUvs113Es83P2xHbs'
+    async function getquandla(){
+        const response = await fetch(pfizer)
+        const data1 = await response.json()
+        console.log(data1.dataset.data[0][1])
+    }
+
+    const nike = 'https://www.quandl.com/api/v3/datasets/EOD/NKE.json?api_key=HA4wUvs113Es83P2xHbs'
+    async function getquandlb(){
+        const response = await fetch(nike)
+        const data1 = await response.json()
+        console.log(data1.dataset.data[0][1])
+    }  
+
+    const bitcoin = 'https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC&tsyms=GBP&api_key=3af25ca99720178b31ee6c52d8c40ead6ceb4ab88e5707a8a63d413026b977f8'
+    async function getcrypto(){
+        const response = await fetch(bitcoin)
+        const data1 = await response.json()
+    }
+
+    const doge = 'https://min-api.cryptocompare.com/data/pricemulti?fsyms=DOGE&tsyms=GBP&api_key=3af25ca99720178b31ee6c52d8c40ead6ceb4ab88e5707a8a63d413026b977f8'
+    async function getcrypto1(){
+        const response = await fetch(doge)
+        const data1 = await response.json()
+    }
+    
+    const polygon = 'https://min-api.cryptocompare.com/data/pricemulti?fsyms=MATIC&tsyms=GBP&api_key=3af25ca99720178b31ee6c52d8c40ead6ceb4ab88e5707a8a63d413026b977f8'
+    async function getcrypto2(){
+        const response = await fetch(polygon)
+        const data1 = await response.json()
+    }
+
+    const exchangerate ='https://api.whatsonchain.com/v1/bsv/main/exchangerate'
+    async function getexchange(){
+      const response = await fetch(exchangerate)
+      const data1 = await response.json()
+      console.log(data1.rate)
+    }
+
+    const circulatingsupply ='https://api.whatsonchain.com/v1/bsv/main/circulatingsupply'
+    async function getsupply(){
+      const response = await fetch(circulatingsupply)
+      const data1 = await response.json()
+      console.log(data1.data)
+    }
+
+
+getquandl()
+getquandla()
+getquandlb()
+getcrypto()
+getcrypto1()
+getcrypto2()
+getexchange()
+getsupply()
+
+</script>
+</HTML>
